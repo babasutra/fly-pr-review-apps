@@ -12,6 +12,8 @@ inputs:
     description: Fly app name
   image:
     description: Optional pre-existing Docker image to use
+  vm_memory:
+    description: vm_memory
   env_file:
     description: path to env file to import into the app
   region:

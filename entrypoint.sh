@@ -21,6 +21,7 @@ app="${INPUT_NAME:-pr-$PR_NUMBER-$REPO_NAME}"
 region="${INPUT_REGION:-${FLY_REGION:-iad}}"
 org="${INPUT_ORG:-${FLY_ORG:-personal}}"
 image="$INPUT_IMAGE"
+vm_memory="#{INPUT_VM_MEMORY}"
 
 if ! echo "$app" | grep "$PR_NUMBER"; then
   echo "For safety, this action requires the app's name to contain the PR number."
@@ -49,7 +50,7 @@ if [ -n "$INPUT_ENV_FILE" ]; then
 fi
 
 if [ "$INPUT_UPDATE" != "false" ]; then
-  flyctl deploy --app "$app" --region "$region" --strategy immediate --image "$image"
+  flyctl deploy --vm-memory "$vm_memory" --app "$app" --region "$region" --strategy immediate --image "$image"
 fi
 
 # Make some info available to the GitHub workflow.
