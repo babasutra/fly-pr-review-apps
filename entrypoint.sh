@@ -21,7 +21,7 @@ app="${INPUT_NAME:-pr-$PR_NUMBER-$REPO_NAME}"
 region="${INPUT_REGION:-${FLY_REGION:-iad}}"
 org="${INPUT_ORG:-${FLY_ORG:-personal}}"
 image="$INPUT_IMAGE"
-vm_memory="#{INPUT_VM_MEMORY}"
+vm_memory="${INPUT_VM_MEMORY}"
 
 if ! echo "$app" | grep "$PR_NUMBER"; then
   echo "For safety, this action requires the app's name to contain the PR number."
