@@ -13,12 +13,11 @@ if [ -z "$PR_NUMBER" ]; then
   exit 1
 fi
 
-REPO_OWNER=$(jq -r .event.base.repo.owner /github/workflow/event.json)
-REPO_NAME=$(jq -r .event.base.repo.name /github/workflow/event.json)
+REPO_NAME=$(echo $GITHUB_REPOSITORY | tr "/" "-")
 EVENT_TYPE=$(jq -r .action /github/workflow/event.json)
 
 # Default the Fly app name to pr-{number}-{repo_owner}-{repo_name}
-app="${INPUT_NAME:-pr-$PR_NUMBER-$REPO_OWNER-$REPO_NAME}"
+app="${INPUT_NAME:-pr-$PR_NUMBER-$REPO_NAME}"
 region="${INPUT_REGION:-${FLY_REGION:-iad}}"
 org="${INPUT_ORG:-${FLY_ORG:-personal}}"
 image="$INPUT_IMAGE"
@@ -42,6 +41,11 @@ fi
 # Attach postgres cluster to the app if specified.
 if [ -n "$INPUT_POSTGRES" ]; then
   flyctl postgres attach --app "$app" "$INPUT_POSTGRES" || true
+fi
+
+# Attach postgres cluster to the app if specified.
+if [ -n "$INPUT_ENV_FILE" ]; then
+  flyctl secrets import --app "$app" < $INPUT_ENV_FILE
 fi
 
 if [ "$INPUT_UPDATE" != "false" ]; then
